@@ -3,6 +3,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { PaperPlaneTilt, GithubLogo, LinkedinLogo, TwitterLogo } from '@phosphor-icons/react';
 import emailjs from '@emailjs/browser';
+import { emailjsConfig } from '../config/emailjs';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -18,14 +19,14 @@ const Contact: React.FC = () => {
   const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
-    // Initialize EmailJS
-    emailjs.init(import.meta.env.VITE_EMAILJS_PUBLIC_KEY);
+    // Initialize EmailJS with config
+    emailjs.init(emailjsConfig.publicKey);
 
     // DEBUG: Current EmailJS Configuration
     console.log('=== EmailJS Configuration ===');
-    console.log('Service ID:', import.meta.env.VITE_EMAILJS_SERVICE_ID);
-    console.log('Template ID:', import.meta.env.VITE_EMAILJS_TEMPLATE_ID);
-    console.log('Public Key:', import.meta.env.VITE_EMAILJS_PUBLIC_KEY);
+    console.log('Service ID:', emailjsConfig.serviceId);
+    console.log('Template ID:', emailjsConfig.templateId);
+    console.log('Public Key:', emailjsConfig.publicKey);
     console.log('===========================');
 
     const tl = gsap.timeline({
@@ -93,19 +94,19 @@ const Contact: React.FC = () => {
       };
 
       console.log('Sending email with params:', templateParams);
-      console.log('Service ID:', import.meta.env.VITE_EMAILJS_SERVICE_ID);
-      console.log('Template ID:', import.meta.env.VITE_EMAILJS_TEMPLATE_ID);
-      console.log('Public Key:', import.meta.env.VITE_EMAILJS_PUBLIC_KEY);
+      console.log('Service ID:', emailjsConfig.serviceId);
+      console.log('Template ID:', emailjsConfig.templateId);
+      console.log('Public Key:', emailjsConfig.publicKey);
 
       let result;
       
       try {
         // Try the direct send method first
         result = await emailjs.send(
-          import.meta.env.VITE_EMAILJS_SERVICE_ID,
-          import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+          emailjsConfig.serviceId,
+          emailjsConfig.templateId,
           templateParams,
-          import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+          emailjsConfig.publicKey
         );
       } catch (sendError) {
         console.log('Direct send failed, trying sendForm method...');
@@ -120,10 +121,10 @@ const Contact: React.FC = () => {
           if (emailInput) emailInput.name = 'user_email';
           
           result = await emailjs.sendForm(
-            import.meta.env.VITE_EMAILJS_SERVICE_ID,
-            import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+            emailjsConfig.serviceId,
+            emailjsConfig.templateId,
             formRef.current,
-            import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+            emailjsConfig.publicKey
           );
           
           // Restore original field names
